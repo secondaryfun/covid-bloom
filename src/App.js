@@ -6,7 +6,7 @@ import Map from './components/USAMap'
 import ReactBootstrapSlider from 'react-bootstrap-slider';
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-slider/dist/css/bootstrap-slider.css"
-import States from './data/states.json'
+let States = require('./components/data/states.json')
 
 // https://covidtracking.com/api
 export default class App extends Component {
@@ -32,32 +32,47 @@ export default class App extends Component {
 		return date
 	}
 	componentDidMount() {
-		// this.getData()
-		// this.updateUserCourses()
+		this.getData()
 	}
+	componentDidUpdate() {
+		this.getData()
+	}
+
 	getData = () => {
 		const url = "https://virus-bloom-api.herokuapp.com/states/" + this.state.currentDay
 
 		fetch(url)
 			.then(res => res.json())
-			.then(result => {
-				this.setState({ dailyCovidStats: result });
+			.then(results => {
+				this.setState({ dailyCovidStats: results });
 			}).catch(err => console.log(err))
 	}
-	// updateUserCourses = () => {
-	// 	const url = "https://udemy-courses-api.herokuapp.com/courses/category/user"
-
-	// 	fetch(url)
-	// 		.then(res => res.json())
-	// 		.then(result => {
-	// 			console.log('Updated user courses.')
-	// 			this.setState({ userCourseList: result });
-	// 		}).catch(err => console.log(err))
-	// }
 	changeValue = (e) => {
-		this.setState({ currentDay: e.target.value })
+		let newDay = this.convertDay(e.target.value)
+		this.setState({ currentDay: newDay })
+	}
+	statesCustomConfig = () => {
+		Object.keys(States).map(function(key, index) {
+			States[key] = {
+				fill: 'navy',
+				clickHandler: (e) => console.log(e.target.dataset)
+			}
+			// console.log(States[key])
+		  });
+		return States
+
+		// return {
+		//   "NJ": {
+		// 	fill: "navy",
+		// 	clickHandler: (event) => console.log('Custom handler for NJ', event.target.dataset)
+		//   },
+		//   "NY": {
+		// 	fill: "#CC0000"
+		//   }
+		// }
 	}
 	render() {
+		// console.log(States)
 		return (
 			<div>
 				<div className="body-wrapper">
@@ -74,7 +89,7 @@ export default class App extends Component {
 						</header>
 						<main>
 							<ReactBootstrapSlider
-								value={this.state.currentDay}
+								// value={this.state.currentDay}
 								slideStop={this.changeValue}
 								step={this.state.step}
 								max={this.state.max}
@@ -82,7 +97,7 @@ export default class App extends Component {
 								orientation="horizontal"
 								// reversed={true}
 								disabled="enabled" />
-							<Map />
+							<Map customize={this.statesCustomConfig()} onClick={this.mapHandler} />
 						</main>
 					</div>
 				</div>
