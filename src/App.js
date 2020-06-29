@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-slider/dist/css/bootstrap-slider.css"
 import States from './data/states.json'
 
-
+// https://covidtracking.com/api
 export default class App extends Component {
 	constructor(props) {
 		super(props)
