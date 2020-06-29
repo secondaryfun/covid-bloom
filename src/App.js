@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 
 import './css/App.css';
+import './css/states.css';
 import Map from './components/USAMap'
 import ReactBootstrapSlider from 'react-bootstrap-slider';
 import "bootstrap/dist/css/bootstrap.css";
@@ -19,20 +20,24 @@ export default class App extends Component {
 			currentDay: startDay,
 			linkStyle: { "textDecoration": "none", "color": "white" },
 			step: 1,
-			max: 20200481,
-			min: startDay,
+			max: 81,
+			min: 1,
+			sliderValue: 1,
+			currState: {"name": 'ID', "cases": 999},
+			stateSettings: States,
 		}
 	}
 	convertDay = (minPlusDays) => {
 		let date
-		if (minPlusDays - this.state.min > 61) date = 20200600 + minPlusDays - this.state.min
-		else if (minPlusDays - this.state.min > 30) date = 20200500 + minPlusDays - this.state.min
+		if (minPlusDays - this.state.min > 61) date = 20200600 + minPlusDays - 61 - this.state.min
+		else if (minPlusDays - this.state.min > 30) date = 20200500 + minPlusDays - 30 - this.state.min
 		else date = 20200600 + minPlusDays - this.state.min
 
 		return date
 	}
 	componentDidMount() {
 		this.getData()
+		this.statesCustomConfig()
 	}
 	componentDidUpdate() {
 		this.getData()
@@ -49,16 +54,18 @@ export default class App extends Component {
 	}
 	changeValue = (e) => {
 		let newDay = this.convertDay(e.target.value)
-		this.setState({ currentDay: newDay })
+		console.log(newDay)
+		this.setState({ currentDay: newDay, sliderValue: e.target.value })
 	}
 	statesCustomConfig = () => {
 		Object.keys(States).map(function(key, index) {
 			States[key] = {
-				fill: 'navy',
+				fill: 'blue',
 				clickHandler: (e) => console.log(e.target.dataset)
 			}
 			// console.log(States[key])
 		  });
+		this.setState({stateSettings: States})
 		return States
 
 		// return {
@@ -71,6 +78,12 @@ export default class App extends Component {
 		//   }
 		// }
 	}
+	mapHandler = (event) => {
+		console.log(event.target.dataset.name);
+		let name = event.target.dataset.name
+		let cases = this.state.dailyCovidStats[name]
+		this.setState({currState: {'name': name, 'cases': cases }})
+	  };
 	render() {
 		// console.log(States)
 		return (
@@ -88,17 +101,25 @@ export default class App extends Component {
 							</Link>
 						</header>
 						<main>
+							Day 1: April 1, 2020 --
 							<ReactBootstrapSlider
-								// value={this.state.currentDay}
+								value={this.state.sliderValue}
 								slideStop={this.changeValue}
 								step={this.state.step}
 								max={this.state.max}
 								min={this.state.min}
 								orientation="horizontal"
-								// reversed={true}
 								disabled="enabled" />
-							<Map customize={this.statesCustomConfig()} onClick={this.mapHandler} />
+							 -- Day 80: June 20, 2020
+							<Map customize={this.state.stateSettings} onClick={this.mapHandler} />
 						</main>
+						<div className="state-detail">
+							<h1>
+								{this.state.currState.name ? 
+								this.state.currState.name + ": " + "this.state.currState.cases" : ""
+								}
+							</h1>
+						</div>
 					</div>
 				</div>
 				<footer className="footer">
