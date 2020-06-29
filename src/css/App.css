@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+body {
+  font-family: "Open Sans", Arial;
+}
+
+h1,h2,h3,h4,h5,h6,p, header {
+  margin-bottom: 1rem
+}
+
+html, body, #root, .App {
+  height: 100%;
+  color: white;
+  background-color: rgba(0, 0, 0, .8);
+  margin: 0;
+  padding: 0;
+}
+
+.body-wrapper {
+  height: 100vh;
+  width: 100vw;
+  background: url("/images/globe.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.body-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100vh;
+  width: 100vw;
+}
+.header {
+    border-bottom: 1px grey solid;
+    text-align: center;
+}
+.header__logo {
+  height: 6rem;
+  width: auto;
+}
+.footer {
+  font-size: .8rem;
+  padding: 2rem;
+}
+
+@media screen and (min-width: 850px) {
+  /* .body-overlay {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+  } */
+  .header {
+      max-width: 1000px;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-end;
+      margin: 0 auto;
+      padding: 0 1rem;
+  }
+  .logo-link {
+    margin-right: auto;
+  }
+  .header h3 {
+    position: relative;
+    top: 2rem;
+    margin-right: 2rem;
+  }
+}
+
+.nav-link:hover {
+  border-bottom: solid 3px #1B50FD;
+  color: blue;
+}
